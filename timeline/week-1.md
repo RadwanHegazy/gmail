@@ -30,3 +30,19 @@
 7. Elasticsearch
 8. Nginx
 
+# Day 2
+
+- Init The Project [Mindmap](https://lucid.app/lucidspark/093b8af6-178e-4b5f-b481-a9c98d913d5a/edit?viewport_loc=-977%2C-295%2C2562%2C1226%2C0_0&invitationId=inv_ba67f965-38a6-4e62-a412-e6d83d59d982)
+
+- Building On The Mindmap : 
+
+    1. `Auth`
+    2. `User`
+
+- Init the [db schema](https://drawsql.app/teams/test-1748/diagrams/gmail)
+
+- Building On The Schema :
+
+    1. `User`
+    2. `UserSpam`
+
