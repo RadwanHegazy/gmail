@@ -42,8 +42,9 @@ BASE_APPS = [
 ]
 
 LOCAL_APPS = [
+    'globals',
     'users',
-    'globals'
+    'spam',
 ]
 
 THIRD_PARTY_APPS = [

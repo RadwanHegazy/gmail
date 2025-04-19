@@ -26,7 +26,7 @@ class CustomUserManager(BaseUserManager):
 
 class User(AbstractUser):
     id = models.UUIDField(default=uuid4, primary_key=True)
-    username = models.CharField(max_length=30, unique=True)
+    username = models.CharField(max_length=100, unique=True)
     email = models.EmailField(unique=True)
     full_name = models.CharField(max_length=30)
     picture = models.ImageField(upload_to='user-pics/')
@@ -39,6 +39,9 @@ class User(AbstractUser):
             )
         ]
     )
+
+    spam = models.OneToOneField("spam.UserSpam" ,on_delete=models.CASCADE, null=True, blank=True)
+
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
@@ -46,7 +49,10 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
+        
+    @property
+    def is_spammed(self) : 
+        return self.spam.spam_counter() > 5
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'
