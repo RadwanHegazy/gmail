@@ -40,7 +40,7 @@ class CacheView:
 
     def get_queryset(self) -> QuerySet:
         """Get queryset from cache or database"""
-        cache_key = self.cache_key or self.get_cache_value()
+        cache_key = self.cache_key or self.get_cache_key()
         self.validate_settings(cache_key)
         
         # Try to get data from cache first
@@ -48,7 +48,7 @@ class CacheView:
         
         if not queryset:
             # Cache miss - get from database and cache it
-            queryset = self.cache_model.objects.all() or self.get_cache_value
+            queryset = self.cache_model.objects.all() if self.cache_model else self.get_cache_value
             cache.set(
                 cache_key,
                 queryset,
