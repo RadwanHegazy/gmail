@@ -45,6 +45,7 @@ LOCAL_APPS = [
     'globals',
     'users',
     'spam',
+    'mail',
 ]
 
 THIRD_PARTY_APPS = [
