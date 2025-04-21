@@ -1,6 +1,8 @@
+from typing import override
 from django.db import models
 from users.models import User
 from uuid import uuid4
+from cryptography.fernet import Fernet
 
 class MAIL_STATUS(models.Choices) : 
     okay = 'okay'
@@ -43,6 +45,11 @@ class Mail (models.Model) :
 
     def __str__(self) : 
         return self.header
+
+    @override
+    def delete(self, using=None, keep_parents=False):
+        self.status = MAIL_STATUS.deleted
+
     
     @property
     def sender_full_name(self) : 
@@ -50,4 +57,21 @@ class Mail (models.Model) :
 
     @property
     def get_body (self) : 
-        return "encrypted body"
+        return self.__fernet.decrypt(
+            self.body.encode()
+        ).decode()
+
+    def set_body (self, body : str) :
+        self.body = self.__fernet.encrypt(
+            body.encode()
+        ).decode()
+
+
+    @property
+    def __fernet(self) : 
+        fernet = Fernet(
+            str(self.sender.id) +
+            str(self.reciver.id) + 
+            str(self.id)
+        )
+        return fernet
