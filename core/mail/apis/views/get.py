@@ -25,7 +25,6 @@ class BaseListView (
         return Mail.objects.filter(
             Q(sender=user) | 
             Q(reciver=user),
-            status = MAIL_STATUS.okay
         )
 
 class ListInboxAPI (
@@ -34,6 +33,10 @@ class ListInboxAPI (
     """
     Endpoint for get the list of the incoming and safe emails.
     """
+    def get_cache_value(self):
+        return Mail.objects.filter(
+            status = MAIL_STATUS.okay
+        )
 
 
 
