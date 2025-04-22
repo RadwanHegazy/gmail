@@ -1,6 +1,9 @@
 from django.urls import path
 from mail.apis.views import (
-    get
+    get,
+    create,
+    retrive,
+    update
 )
 
 
@@ -10,4 +13,10 @@ urlpatterns = [
     path('get/v1/delete/', get.ListDeleteAPI.as_view(), name='deleted_emails'),    
     path('get/v1/spam/', get.ListSpamAPI.as_view(), name='spammed_emails'),
     path('get/v1/sent/', get.ListSentAPI.as_view(), name='sent_emails'),
+    path('get/v1/mail/<int:id>/', retrive.RetriveMailAPI.as_view(), name='get_email'),
+
+    path('create/v1/', create.CreateMailAPI.as_view(),name='create_email'),
+
+    path('update/mail/v1/star/', update.EmailStarAPI.as_view(),name='star_mail'),
+    path('update/mail/v1/read/', update.EmailReadAPI.as_view(),name='read_mail'),
 ]

@@ -92,9 +92,5 @@ class ListStarAPI (
             reciver = self.request.user,
             status = MAIL_STATUS.starred
         )
-
-
-
-
-    
+        
 
