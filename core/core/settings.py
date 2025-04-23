@@ -124,7 +124,7 @@ AUTH_USER_MODEL = 'users.User'
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'EET'
 
 USE_I18N = True
 
@@ -176,5 +176,22 @@ CHANNEL_LAYERS = {
 ELASTICSEARCH_DSL = {
     'default': {
         'hosts': os.environ.get('ELASTICSEARCH_URL')
+    },
+}
+
+# Celery Conf
+
+CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'EET'
+
+# Celery Beat Settings
+CELERY_BEAT_SCHEDULE = {
+    'cleanup-deleted-mails': {
+        'task': 'mail.tasks.cleanup_deleted_mails',
+        'schedule': timedelta(days=1), 
     },
 }
