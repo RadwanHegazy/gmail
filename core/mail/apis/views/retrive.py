@@ -24,8 +24,8 @@ class RetriveMailAPI (
             Q(reciver=user)
         )
 
-    def get(self, request, *args, **kwargs):
-        model = self.get_object()
+    def get_object(self):
+        model = super().get_object()
         model.is_read = True
         model.save()
-        return super().get(request, *args, **kwargs)
+        return model

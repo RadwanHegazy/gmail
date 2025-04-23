@@ -1,4 +1,3 @@
-from typing import override
 from django.db import models
 from users.models import User
 from uuid import uuid4
@@ -46,8 +45,7 @@ class Mail (models.Model) :
     def __str__(self) : 
         return self.header
 
-    @override
-    def delete(self, using=None, keep_parents=False):
+    def soft_delete(self) : 
         self.status = MAIL_STATUS.deleted
 
     

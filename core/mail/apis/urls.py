@@ -3,7 +3,8 @@ from mail.apis.views import (
     get,
     create,
     retrive,
-    update
+    update,
+    delete
 )
 
 
@@ -17,6 +18,8 @@ urlpatterns = [
 
     path('create/v1/', create.CreateMailAPI.as_view(),name='create_email'),
 
-    path('update/mail/v1/star/', update.EmailStarAPI.as_view(),name='star_mail'),
-    path('update/mail/v1/read/', update.EmailReadAPI.as_view(),name='read_mail'),
+    path('update/v1/star/', update.EmailStarAPI.as_view(),name='star_mail'),
+    path('update/v1/read/', update.EmailReadAPI.as_view(),name='read_mail'),
+
+    path('delete/v1/<int:id>/', delete.DeleteMailAPI.as_view(), name='delete_mail')
 ]
