@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-import os
+import os, sys
 import dj_database_url
 from pathlib import Path
 
@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-wx^xd&hq*hra8l6p8n=$6x5^al7f3s(8krnz&kuqw^uaf@7*cb
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -52,6 +52,7 @@ LOCAL_APPS = [
 THIRD_PARTY_APPS = [
     'rest_framework',
     'dj_notification',
+    'django_elasticsearch_dsl',
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_PARTY_APPS
@@ -153,7 +154,22 @@ REST_FRAMEWORK = {
 
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
+
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    },
+
 }
+
+if 'test' in sys.argv : 
+    REST_FRAMEWORK.pop('DEFAULT_THROTTLE_CLASSES')
+    REST_FRAMEWORK.pop('DEFAULT_THROTTLE_RATES')
+
 
 # JWT Conf
 from datetime import timedelta
@@ -179,8 +195,14 @@ ELASTICSEARCH_DSL = {
     },
 }
 
-# Celery Conf
+# Elasticsearch index settings
+ELASTICSEARCH_INDEX_NAMES = {
+    'core.documents.user': 'users',
+    'core.documents.mail': 'mails',
+}
 
+
+# Celery Conf
 CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
 CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
 CELERY_ACCEPT_CONTENT = ['json']

@@ -1,7 +1,7 @@
 from celery import shared_task
 from datetime import timedelta
 from django.utils import timezone
-from mail.models import Mail
+from mail.models import Mail, MAIL_STATUS
 
 @shared_task
 def cleanup_deleted_mails():
@@ -12,8 +12,8 @@ def cleanup_deleted_mails():
     
     # Get all soft-deleted mails older than 30 days
     old_deleted_mails = Mail.objects.filter(
-        is_deleted=True,
-        created_at__lte=threshold_date
+        status=MAIL_STATUS.deleted,
+        datetime__lte=threshold_date
     )
     
     # Permanently delete these mails
