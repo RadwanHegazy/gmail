@@ -1,4 +1,5 @@
 from users.models import User
+from django.core.files.uploadedfile import InMemoryUploadedFile
 
 MAIL_BLACKLIST_WORDS = [
     # Financial scams
@@ -36,6 +37,13 @@ MAIL_BLACKLIST_WORDS = [
     'bulk', 'mass', 'spam', 'advertisement'
 ]
 
+MAIL_BLACKLIST_ATTCHMENTS = [
+    "application/vnd.microsoft.portable-executable"
+    "text/x-shellscript",
+    "application/bat", 
+    "application/x-bat"
+    "application/javascript"
+]
 
 def is_body_safe(body: str) -> bool:
     """
@@ -95,3 +103,14 @@ def is_user_safe(user : User) -> bool :
         Check sender is spammed.
     """
     return user.is_spammed == False
+
+
+def is_attachment_safe(attachments:list[InMemoryUploadedFile]) -> bool :
+    if not any(attchments) :
+        return True
+
+    for attch in attachments :
+        if attch.content_type in MAIL_BLACKLIST_ATTCHMENTS : 
+            return False
+
+    return True
