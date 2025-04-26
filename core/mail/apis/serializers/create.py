@@ -21,6 +21,7 @@ class CreateMailSerializer ( serializers.ModelSerializer ) :
             })
 
         attrs['sender'] = request.user
+        attrs['attchments'] = request.FILES.getlist('attchments') if request.FILES else []
         return attrs
     
     def save(self, **kwargs):

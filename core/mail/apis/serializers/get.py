@@ -1,6 +1,14 @@
 from rest_framework import serializers
-from mail.models import Mail
+from mail.models import Mail, Attachment
 from users.apis.serializers import MailUserSerializer
+
+class AttachmentSerializer (
+    serializers.ModelSerializer
+) : 
+
+    class Meta:
+        model = Attachment
+        fields = "__all__"
 
 class ListMailSerializer (
     serializers.ModelSerializer
@@ -21,6 +29,7 @@ class RetriveMailSerializer (
     serializers.ModelSerializer
 ) :
     sender = MailUserSerializer()
+    attachments = AttachmentSerializer(many=True)
 
     class Meta:
         model = Mail
@@ -31,4 +40,5 @@ class RetriveMailSerializer (
             'is_read',
             'datetime',
             'get_body',
+            'attachments',
         ]

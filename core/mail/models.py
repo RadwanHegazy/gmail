@@ -1,7 +1,23 @@
+from typing import override
 from django.db import models
 from users.models import User
 from uuid import uuid4
 from cryptography.fernet import Fernet
+import mimetypes
+
+
+class Attachment (models.Model) : 
+    file = models.FileField(upload_to="mail-uploads/")
+    content_type = models.CharField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    @override
+    def save(self, *args, force_insert=False, force_update=False, using=None, update_fields=None):
+        if self.file:
+            # Get the content type based on the file extension
+            content_type, _ = mimetypes.guess_type(self.file.name)
+            self.content_type = content_type or 'application/octet-stream'
+        return super().save(*args, force_insert=force_insert, force_update=force_update, using=using, update_fields=update_fields)
 
 class MAIL_STATUS(models.Choices) : 
     okay = 'okay'
@@ -29,12 +45,18 @@ class Mail (models.Model) :
         on_delete=models.SET_NULL,
         null=True
     )
+    
+    attachments = models.ManyToManyField(
+        Attachment,
+        related_name = "mail_attachmets",
+        blank = True
+    )
+
 
     header = models.CharField(max_length=100)
     body = models.BinaryField()
     datetime = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
-    
     status = models.CharField(
         max_length=10, 
         choices=MAIL_STATUS, 
@@ -73,3 +95,4 @@ class Mail (models.Model) :
             str(self.id)
         )
         return fernet
+
