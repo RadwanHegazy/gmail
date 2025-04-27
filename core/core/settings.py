@@ -218,3 +218,15 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(days=1), 
     },
 }
+
+# Swagger Settings
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header'
+        }
+    },
+    'USE_SESSION_AUTH': False,
+}

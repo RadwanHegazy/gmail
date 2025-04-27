@@ -14,12 +14,10 @@ class MailDocument(Document):
         'email': fields.TextField(),
         'username': fields.TextField(),
     })
-    subject = fields.TextField()
-    content = fields.TextField()
-    created_at = fields.DateField()
+    header = fields.TextField()
+    datetime = fields.DateField()
     is_read = fields.BooleanField()
-    is_starred = fields.BooleanField()
-    is_deleted = fields.BooleanField()
+    status = fields.TextField()
 
     class Index:
         name = 'mails'

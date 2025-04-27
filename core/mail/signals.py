@@ -10,20 +10,11 @@ def action_after_save(created, instance, **kwargs) :
     cache.delete(f'{instance.sender.id}_mails')
     cache.delete(f'{instance.reciver.id}_mails')
 
-    try:
-        instance_doc = MailDocument.get(id=instance.id)
-        instance_doc.update(instance)
-    except:
-        MailDocument.init(instance)
+    MailDocument().update(instance)
 
 @receiver(post_delete, sender=Mail)
 def action_before_delete(instance, **kwargs) : 
     cache.delete(f'{instance.sender.id}_mails')
     cache.delete(f'{instance.reciver.id}_mails')
 
-    try:
-        instance_doc = MailDocument.get(id=instance.id)
-        instance_doc.delete()
-    except:
-        pass
-
+    MailDocument().update(instance, action='delete')

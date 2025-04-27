@@ -20,6 +20,7 @@ class BaseListView (
     def get_cache_key(self):
         return f"{self.request.user.id}_mails"
     
+    
     def get_cache_value(self):
         user = self.request.user
         return Mail.objects.filter(
@@ -28,25 +29,21 @@ class BaseListView (
             'sender', 'reciver'
         ).prefetch_related(
             'attachments'
-        ).only(
-            'id', 'header', 'datetime', 'is_read', 'status',
-            'sender__id', 'sender__full_name',
-            'reciver__id', 'reciver__full_name'
         ).order_by('-datetime')
 
+        
 class ListInboxAPI (
     BaseListView
 ) :  
     """
     Endpoint for get the list of the incoming and safe emails.
     """
-    def get_cache_value(self):
-        return Mail.objects.filter(
-            status = MAIL_STATUS.okay
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            Q(reciver = self.request.user) |
+            Q(status = MAIL_STATUS.okay)
         )
-
-
-
 class ListSentAPI (
     BaseListView
 ) : 

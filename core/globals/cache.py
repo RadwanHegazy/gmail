@@ -32,11 +32,11 @@ class CacheView:
         if not cache_key:
             raise ValueError("Cache key must be set via `cache_key` or `get_cache_key()`")
         
-        if not self.cache_model:
-            raise ValueError("cache_model must be set")
+        # if not self.cache_model:
+        #     raise ValueError("cache_model must be set")
             
-        if not issubclass(self.cache_model, Model):
-            raise ValueError("cache_model must be a valid Django Model class")
+        # if not issubclass(self.cache_model, Model):
+        #     raise ValueError("cache_model must be a valid Django Model class")
 
     def get_queryset(self) -> QuerySet:
         """Get queryset from cache or database"""
@@ -48,13 +48,12 @@ class CacheView:
         
         if not queryset:
             # Cache miss - get from database and cache it
-            queryset = self.cache_model.objects.all() if self.cache_model else self.get_cache_value
+            queryset = self.cache_model.objects.all() if self.cache_model else self.get_cache_value()
             cache.set(
                 cache_key,
                 queryset,
                 timeout=int(self.cache_timeout.total_seconds())
             )
-        
         return queryset
 
     def get_cache_value(self) : 
