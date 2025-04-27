@@ -23,9 +23,16 @@ class BaseListView (
     def get_cache_value(self):
         user = self.request.user
         return Mail.objects.filter(
-            Q(sender=user) | 
-            Q(reciver=user),
-        )
+            Q(sender=user) | Q(reciver=user),
+        ).select_related(
+            'sender', 'reciver'
+        ).prefetch_related(
+            'attachments'
+        ).only(
+            'id', 'header', 'datetime', 'is_read', 'status',
+            'sender__id', 'sender__full_name',
+            'reciver__id', 'reciver__full_name'
+        ).order_by('-datetime')
 
 class ListInboxAPI (
     BaseListView
