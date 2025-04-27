@@ -53,6 +53,7 @@ THIRD_PARTY_APPS = [
     'rest_framework',
     'dj_notification',
     'django_elasticsearch_dsl',
+    'drf_yasg',
 ]
 
 INSTALLED_APPS = BASE_APPS + LOCAL_APPS + THIRD_PARTY_APPS
