@@ -58,7 +58,6 @@ class InboxTestCase(TestCase):
     def test_get_inbox_success(self):
         """Test retrieving inbox mails successfully"""
         response = self.client.get(self.inbox_url, headers=create_headers(self.reciver))
-
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['count'], 2)
         
@@ -82,5 +81,5 @@ class InboxTestCase(TestCase):
         Mail.objects.all().delete()
         response = self.client.get(self.inbox_url, headers=create_headers(self.sender))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.json()['results']), 0)
+        self.assertEqual(response.json()['count'], 0)
         
