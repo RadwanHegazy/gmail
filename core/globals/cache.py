@@ -32,11 +32,9 @@ class CacheView:
         if not cache_key:
             raise ValueError("Cache key must be set via `cache_key` or `get_cache_key()`")
         
-        # if not self.cache_model:
-        #     raise ValueError("cache_model must be set")
+        if self.cache_model == None and self.get_cache_value() == None:
+            raise ValueError("attr `cache_model` or method `get_cache_value()` must set one of them")
             
-        # if not issubclass(self.cache_model, Model):
-        #     raise ValueError("cache_model must be a valid Django Model class")
 
     def get_queryset(self) -> QuerySet:
         """Get queryset from cache or database"""
