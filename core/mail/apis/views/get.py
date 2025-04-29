@@ -41,8 +41,8 @@ class ListInboxAPI (
 
     def get_queryset(self):
         return super().get_queryset().filter(
-            Q(reciver = self.request.user) |
-            Q(status = MAIL_STATUS.okay)
+            reciver = self.request.user,
+            status = MAIL_STATUS.okay.value
         )
 class ListSentAPI (
     BaseListView
@@ -66,7 +66,7 @@ class ListSpamAPI (
     def get_queryset(self):
         return super().get_queryset().filter(
             reciver = self.request.user,
-            status = MAIL_STATUS.spammed
+            status = MAIL_STATUS.spammed.value
         )
 
 class ListDeleteAPI (
@@ -79,7 +79,7 @@ class ListDeleteAPI (
     def get_queryset(self):
         return super().get_queryset().filter(
             reciver = self.request.user,
-            status = MAIL_STATUS.deleted
+            status = MAIL_STATUS.deleted.value
         )
 
 
@@ -94,7 +94,7 @@ class ListStarAPI (
     def get_queryset(self):
         return super().get_queryset().filter(
             reciver = self.request.user,
-            status = MAIL_STATUS.starred
+            status = MAIL_STATUS.starred.value
         )
         
 
