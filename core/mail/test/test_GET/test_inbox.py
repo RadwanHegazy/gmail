@@ -1,23 +1,19 @@
-from django.test import TestCase, Client
+from rest_framework.test import APITestCase
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from mail.models import Mail
 from rest_framework import status
-from globals.test_objects import create_headers
+from globals.test_objects import create_headers, create_user, create_mail
 
-class InboxTestCase(TestCase):
+class InboxTestCase(APITestCase):
     def setUp(self):
-        self.client = Client()
-        self.User = get_user_model()
-        
         # Create test users
-        self.sender = self.User.objects.create_user(
-            email='sender@test.com',
-            password='testpass123',
-            username='t1',
-            full_name='Sender'
+        self.sender = create_user(
+            username = 't1',
+            email = 'sender@test.com',
+            full_name = "Sender"
         )
-        self.reciver = self.User.objects.create_user(
+        
+        self.reciver = create_user(
             email='reciver@test.com',
             password='testpass123',
             username='t2',
@@ -25,26 +21,26 @@ class InboxTestCase(TestCase):
         )
         
         # Create test mails
-        self.mail1 = Mail.objects.create(
-            sender=self.sender,
-            reciver=self.reciver,
+        self.mail1 = create_mail(
+            from_=self.sender,
+            to=self.reciver,
             header='Test Mail 1',
             body='Test Content 1'.encode(),
             is_read=False,
             status='okay'
         )
-        self.mail2 = Mail.objects.create(
-            sender=self.sender,
-            reciver=self.reciver,
+        self.mail2 = create_mail(
+            from_=self.sender,
+            to=self.reciver,
             header='Test Mail 2',
             body='Test Content 2'.encode(),
             is_read=True,
             status='okay'
         )
 
-        self.mail3 = Mail.objects.create(
-            sender=self.reciver,
-            reciver=self.sender,
+        self.mail3 = create_mail(
+            from_=self.reciver,
+            to=self.sender,
             header='Test Mail 3',
             body='Test Content 3'.encode(),
             is_read=False,
@@ -76,10 +72,9 @@ class InboxTestCase(TestCase):
         self.assertEqual(data[0]['sender_full_name'], self.sender.full_name)
         self.assertTrue(data[0]['is_read'])
         
-    def test_inbox_empty(self):
+    def test_sender_inbox(self):
         """Test empty inbox"""
-        Mail.objects.all().delete()
         response = self.client.get(self.inbox_url, headers=create_headers(self.sender))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.json()['count'], 0)
+        self.assertEqual(response.json()['count'], 1)
         
