@@ -78,21 +78,20 @@ class Mail (models.Model) :
     @property
     def get_body (self) : 
         return self.__fernet.decrypt(
-            self.body.encode()
+            bytes(self.body)
         ).decode()
 
     def set_body (self, body : str) :
         self.body = self.__fernet.encrypt(
             body.encode()
-        ).decode()
+        )
 
 
     @property
     def __fernet(self) : 
+        key = self.sender.hash_key + self.reciver.hash_key
         fernet = Fernet(
-            str(self.sender.id) +
-            str(self.reciver.id) + 
-            str(self.id)
+            key
         )
         return fernet
 
