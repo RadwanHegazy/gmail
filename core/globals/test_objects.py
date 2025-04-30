@@ -22,18 +22,20 @@ def create_mail(
     from_ = None,
     to = None,
     header = "Test Header",
-    body = "Test Body".encode(),
+    body = "Test Body",
     is_read = False,
     status = "okay"
 ) : 
-    return Mail.objects.create(
+    mail = Mail.objects.create(
             sender=from_ if from_ else create_user(),
             reciver=to if to else create_user(),
             header=header,
-            body=body,
             is_read=is_read,
             status=status
         )
+    mail.set_body(body)
+    mail.save()
+    return mail
 
 def create_tokens(user=None) : 
     return str(
