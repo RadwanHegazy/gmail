@@ -1,6 +1,5 @@
 from rest_framework.test import APITestCase
 from django.urls import reverse
-from mail.models import Mail
 from rest_framework import status
 from globals.test_objects import create_headers, create_user, create_mail
 
@@ -25,7 +24,7 @@ class InboxTestCase(APITestCase):
             from_=self.sender,
             to=self.reciver,
             header='Test Mail 1',
-            body='Test Content 1'.encode(),
+            body='Test Content 1',
             is_read=False,
             status='okay'
         )
@@ -33,7 +32,7 @@ class InboxTestCase(APITestCase):
             from_=self.sender,
             to=self.reciver,
             header='Test Mail 2',
-            body='Test Content 2'.encode(),
+            body='Test Content 2',
             is_read=True,
             status='okay'
         )
@@ -42,7 +41,7 @@ class InboxTestCase(APITestCase):
             from_=self.reciver,
             to=self.sender,
             header='Test Mail 3',
-            body='Test Content 3'.encode(),
+            body='Test Content 3',
             is_read=False,
             status='okay'
         )
