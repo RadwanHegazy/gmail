@@ -13,6 +13,7 @@ class RetriveMailAPI (
 
     permission_classes = [IsMailReciver]
     serializer_class = RetriveMailSerializer
+    lookup_field = 'id'
     
     def get_cache_key(self) :
         return f'{self.request.user.id}_mails'

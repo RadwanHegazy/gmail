@@ -14,7 +14,7 @@ urlpatterns = [
     path('get/v1/delete/', get.ListDeleteAPI.as_view(), name='deleted_emails'),    
     path('get/v1/spam/', get.ListSpamAPI.as_view(), name='spammed_emails'),
     path('get/v1/sent/', get.ListSentAPI.as_view(), name='sent_emails'),
-    path('get/v1/mail/<int:id>/', retrive.RetriveMailAPI.as_view(), name='get_email'),
+    path('get/v1/mail/<uuid:id>/', retrive.RetriveMailAPI.as_view(), name='get_email'),
 
     path('create/v1/', create.CreateMailAPI.as_view(),name='create_email'),
 
