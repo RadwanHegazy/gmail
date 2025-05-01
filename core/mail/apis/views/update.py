@@ -3,7 +3,6 @@ from globals.permissions import IsMailReciver
 from mail.apis.serializers import ReadMailSerializer, StarMailSerializer
 from globals.cache import CacheView
 from mail.models import Mail
-
 class BaseUpdateView (
     CacheView,
     UpdateAPIView
@@ -11,6 +10,7 @@ class BaseUpdateView (
 
     permission_classes = [IsMailReciver]
     serializer_class = None
+    lookup_field = 'id'
     
     def get_cache_key(self) :
         return f"{self.request.user.id}_mails"
