@@ -1,4 +1,5 @@
 from celery import shared_task
+from users.models import User
 from mail.models import Mail, MAIL_STATUS, Attachment
 from dj_notification.notify import send_notification
 from mail.apis.serializers import ListMailSerializer
@@ -22,10 +23,13 @@ def check_before_send (**kwargs) -> None :
     """
     data = kwargs
 
+    data['sender'] = User.objects.get(id=data['sender'])
+    data['reciver'] = User.objects.get(id=data['reciver'])
+
     if is_body_safe(data.get('body')) and is_user_safe(data.get('sender')) and is_bypass_maximum_mails_per_day(data.get('sender')) and is_attachment_safe(data.get('attchments')): 
-        data['status'] = MAIL_STATUS.okay
+        data['status'] = MAIL_STATUS.okay.value
     else:
-        data['status'] = MAIL_STATUS.spammed
+        data['status'] = MAIL_STATUS.spammed.value
 
 
 
@@ -42,7 +46,7 @@ def check_before_send (**kwargs) -> None :
 
     model.save()
 
-    if data['status'] == MAIL_STATUS.okay :
+    if data['status'] == MAIL_STATUS.okay.value :
         serializer = ListMailSerializer(real_time_data)
         send_notification(
             to_user_id=real_time_data.get('reciver'),
