@@ -1,9 +1,9 @@
-from mail.models import Mail
+from mail.models import Mail, User
 from rest_framework import serializers
 
 class CreateMailSerializer ( serializers.ModelSerializer ) : 
     body = serializers.CharField()
-
+    reciver = serializers.UUIDField()
     class Meta:
         model = Mail
         fields = [
@@ -13,14 +13,20 @@ class CreateMailSerializer ( serializers.ModelSerializer ) :
         ]
 
     def validate(self, attrs):
-        request = attrs.get('request')
-        
-        if attrs['reciver'] == request.user :
-            raise serializers.ValidationError({
-                'message' : "Can't sent messages to your self"
-            })
+        request = self.context.get('request')
+        reciver_id = attrs['reciver']
 
-        attrs['sender'] = request.user
+        reciver = User.objects.filter(id=reciver_id).exclude(id=request.user.id)
+
+        if not reciver.exists() :
+            raise serializers.ValidationError({
+                'message' : "invalid reciver"
+            })
+      
+
+
+        attrs['sender'] = request.user.id
+        attrs['reciver'] = reciver.first().id
         attrs['attchments'] = request.FILES.getlist('attchments') if request.FILES else []
         return attrs
     

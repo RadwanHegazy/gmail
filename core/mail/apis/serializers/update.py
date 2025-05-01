@@ -13,7 +13,7 @@ class StarMailSerializer (serializers.ModelSerializer) :
         read_only = ['status']
 
     def validate(self, attrs):
-        attrs['status'] = MAIL_STATUS.starred
+        attrs['status'] = MAIL_STATUS.starred.value
         return attrs
 class ReadMailSerializer (serializers.ModelSerializer) :
 
