@@ -29,7 +29,5 @@ class SpamUserSerializer (serializers.Serializer) :
         spammed_user.spam.spammed_by.add(user)
         spammed_user.save()
 
-
-
     def to_representation(self, instance):
         return {}
