@@ -40,8 +40,7 @@ def check_before_send (**kwargs) -> None :
     model.set_body(body)
 
     for attch in attachments : 
-        atch_model = Attachment.objects.create(file=attch)
-        atch_model.save()
+        atch_model = Attachment.objects.get(id=attch)
         model.attachments.add(atch_model)
 
     model.save()

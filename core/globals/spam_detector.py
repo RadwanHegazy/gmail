@@ -105,11 +105,12 @@ def is_user_safe(user : User) -> bool :
     return user.is_spammed == False
 
 
-def is_attachment_safe(attachments:list[InMemoryUploadedFile]) -> bool :
+def is_attachment_safe(attachments:list[int]) -> bool :
     if not any(attchments) :
         return True
 
     for attch in attachments :
+        attch = Attachment.objects.get(id=attch)
         if attch.content_type in MAIL_BLACKLIST_ATTCHMENTS : 
             return False
 

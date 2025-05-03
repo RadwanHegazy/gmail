@@ -10,7 +10,8 @@ class DeleteMailAPI (
 
     permission_classes = IsMailReciver
     cache_model = Mail
-
+    lookup_field = 'id'
+    
     def get_cache_key(self) :
         return f"{self.request.user}_mails"
 

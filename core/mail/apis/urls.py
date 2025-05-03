@@ -4,7 +4,8 @@ from mail.apis.views import (
     create,
     retrive,
     update,
-    search
+    search,
+    delete
 )
 
 
@@ -20,6 +21,7 @@ urlpatterns = [
 
     path('update/v1/star/<uuid:id>/', update.EmailStarAPI.as_view(),name='star_mail'),
     path('update/v1/read/<uuid:id>/', update.EmailReadAPI.as_view(),name='read_mail'),
+    path('delete/v1/<uuid:id>/', delete.DeleteMailAPI.as_view(),name='delete_mail'),
 
     path('search/v1/', search.SearchMailAPI.as_view(), name='search_emails'),
 ]

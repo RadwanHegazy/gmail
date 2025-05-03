@@ -1,4 +1,4 @@
-from mail.models import Mail, User
+from mail.models import Mail, User, Attachment
 from rest_framework import serializers
 
 class CreateMailSerializer ( serializers.ModelSerializer ) : 
@@ -27,7 +27,15 @@ class CreateMailSerializer ( serializers.ModelSerializer ) :
 
         attrs['sender'] = request.user.id
         attrs['reciver'] = reciver.first().id
-        attrs['attchments'] = request.FILES.getlist('attchments') if request.FILES else []
+        attach_list = request.FILES.getlist('attchments') if request.FILES else []
+        attrs['attchments'] = [] 
+
+        for attach in attach_list:
+            attch_obj = Attachment.objects.create(
+                file = attach,
+            )
+            attrs['attachments'].append(attch_obj.id)
+
         return attrs
     
     def save(self, **kwargs):

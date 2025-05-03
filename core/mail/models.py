@@ -29,7 +29,7 @@ class Mail (models.Model) :
     id = models.UUIDField(
         primary_key=True,
         unique=True,
-        default=uuid4
+        default=uuid4,
     )
 
     sender = models.ForeignKey(

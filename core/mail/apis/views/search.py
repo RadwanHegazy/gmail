@@ -1,9 +1,11 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
 from elasticsearch_dsl import Q
+from django.db.models import Q as django_q
 from mail.documents import MailDocument
 from mail.apis.serializers.search import MailSearchSerializer
-from django.core.paginator import Paginator
+from mail.models import Mail
+from uuid import UUID
 
 class SearchMailAPI(ListAPIView):
     permission_classes = [IsAuthenticated]
@@ -20,28 +22,21 @@ class SearchMailAPI(ListAPIView):
                 'multi_match',
                 query=query,
                 fields=[
-                    'subject^3',  # boost subject matches
-                    'content',
-                    'sender.email',
-                    'sender.username',
-                    'reciver.email',
-                    'reciver.username'
+                    'header^2'
                 ]
             )
             search = search.query(q)
         
-        # Filter for user's emails only
-        user_filter = Q('bool', should=[
-            Q('term', **{'sender.id': user.id}),
-            Q('term', **{'reciver.id': user.id})
-        ])
-        search = search.query(user_filter)
-        
+     
         # Execute search
         response = search.execute()
-        
+
         # Get Django queryset from Elasticsearch results
-        ids = [hit.id for hit in response]
+        ids = [UUID(hit.id) for hit in response]
+
         queryset = Mail.objects.filter(id__in=ids)
-        
+        queryset = queryset.filter(
+            django_q(sender=user) |
+            django_q(reciver=user)
+        )
         return queryset

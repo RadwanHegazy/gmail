@@ -4,13 +4,14 @@ from mail.models import Mail
 
 @registry.register_document
 class MailDocument(Document):
+    id = fields.KeywordField()
     sender = fields.ObjectField(properties={
-        'id': fields.IntegerField(),
+        'id': fields.KeywordField(),
         'email': fields.TextField(),
         'username': fields.TextField(),
     })
     reciver = fields.ObjectField(properties={
-        'id': fields.IntegerField(),
+        'id': fields.KeywordField(),
         'email': fields.TextField(),
         'username': fields.TextField(),
     })
@@ -28,6 +29,3 @@ class MailDocument(Document):
 
     class Django:
         model = Mail
-        fields = [
-            'id',
-        ]
