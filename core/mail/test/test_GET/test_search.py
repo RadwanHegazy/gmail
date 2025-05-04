@@ -54,10 +54,10 @@ class SearchMailsTestCases(APITestCase):
 
     def test_search_results(self) : 
         req = self.client.get(
-            self.search_endpoint('Confirm'),
+            self.search_endpoint('Eid'),
             headers=self.headers
         )
         self.assertEqual(req.status_code, status.HTTP_200_OK)
-        self.assertNotEqual(req.json()['count'], 0)
+        self.assertNotEqual(req.json()['count'], 2)
     
  
