@@ -33,7 +33,7 @@ def check_before_send (**kwargs) -> None :
 
 
 
-    attachments = data.pop('attchments')
+    attachments = data.pop('attachments')
     real_time_data = data.copy()
     body = data.pop('body')
     model = Mail.objects.create(**data)
