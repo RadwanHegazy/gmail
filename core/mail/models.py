@@ -68,7 +68,8 @@ class Mail (models.Model) :
         return self.header
 
     def soft_delete(self) : 
-        self.status = MAIL_STATUS.deleted
+        self.status = MAIL_STATUS.deleted.value
+        self.save()
 
     
     @property
