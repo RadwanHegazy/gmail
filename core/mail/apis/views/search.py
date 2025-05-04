@@ -31,9 +31,7 @@ class SearchMailAPI(ListAPIView):
         # Execute search
         response = search.execute()
 
-        # Get Django queryset from Elasticsearch results
-        ids = [UUID(hit.id) for hit in response]
-
+        ids = [hit.id for hit in response]
         queryset = Mail.objects.filter(id__in=ids)
         queryset = queryset.filter(
             django_q(sender=user) |
