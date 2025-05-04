@@ -28,7 +28,7 @@ class CreateMailSerializer ( serializers.ModelSerializer ) :
         attrs['sender'] = request.user.id
         attrs['reciver'] = reciver.first().id
         attach_list = request.FILES.getlist('attchments') if request.FILES else []
-        attrs['attchments'] = [] 
+        attrs['attachments'] = [] 
 
         for attach in attach_list:
             attch_obj = Attachment.objects.create(
