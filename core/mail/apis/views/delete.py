@@ -8,7 +8,7 @@ class DeleteMailAPI (
     DestroyAPIView
 ) : 
 
-    permission_classes = IsMailReciver
+    permission_classes = [IsMailReciver]
     cache_model = Mail
     lookup_field = 'id'
     
