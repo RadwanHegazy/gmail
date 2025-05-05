@@ -55,3 +55,25 @@ class CreateMailTestCase(APITestCase):
 
 
         
+    def test_success_has_attachments(self):
+        reciver = create_user()
+        body = {
+            'body' : "<h1>This is my Body!!!</h1>",
+            'header' : "Normal Header.",
+            'reciver' : str(reciver.id),
+           'attachments' : [
+                open('media/user-pics/test.png','rb'),
+                open('media/user-pics/test.png','rb'),
+                open('media/user-pics/test.png','rb'),
+           ]
+        }
+        req = self.client.post(
+            self.create_endpoint,
+            headers=self.headers,
+            data=body
+        )
+
+        self.assertEqual(req.status_code, status.HTTP_201_CREATED)
+
+
+        

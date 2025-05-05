@@ -46,14 +46,14 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['full_name', 'phonenumber']
+    REQUIRED_FIELDS = ['full_name', 'phonenumber', 'username']
 
     def __str__(self):
         return self.email
         
     @property
     def is_spammed(self) : 
-        return self.spam.spam_counter() > 5
+        return self.spam.spam_counter > 5
     class Meta:
         verbose_name = 'user'
         verbose_name_plural = 'users'

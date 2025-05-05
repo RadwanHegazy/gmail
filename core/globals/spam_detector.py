@@ -1,5 +1,6 @@
 from users.models import User
-from django.core.files.uploadedfile import InMemoryUploadedFile
+from datetime import datetime, timedelta
+from mail.models import Mail, Attachment
 
 MAIL_BLACKLIST_WORDS = [
     # Financial scams
@@ -78,7 +79,7 @@ def is_body_safe(body: str) -> bool:
     return spam_ratio <= 5
 
 
-def is_bypass_maximum_mails_per_day(user: User) -> bool:
+def is_bypass_maximum_mails_per_day(user) -> bool:
     """
     Check if a user is not sending too many emails per day.
     
@@ -89,26 +90,23 @@ def is_bypass_maximum_mails_per_day(user: User) -> bool:
         bool: True if user's email sending pattern is safe, False if exceeding limits
     """
     # Get count of emails sent by user in last 24 hours
-    emails_today = User.objects.filter(
+    emails_today = Mail.objects.filter(
         sender = user,
-        created_at__gte=datetime.now() - timedelta(days=1)
+        datetime__gte=datetime.now() - timedelta(days=1)
     ).count()
     
     # Return False if user sent more than 100 emails in 24 hours
     return emails_today <= 100
 
 
-def is_user_safe(user : User) -> bool :
+def is_user_safe(user) -> bool :
     """
         Check sender is spammed.
     """
     return user.is_spammed == False
 
 
-def is_attachment_safe(attachments:list[int]) -> bool :
-    if not any(attchments) :
-        return True
-
+def is_attachment_safe(attachments) -> bool :
     for attch in attachments :
         attch = Attachment.objects.get(id=attch)
         if attch.content_type in MAIL_BLACKLIST_ATTCHMENTS : 

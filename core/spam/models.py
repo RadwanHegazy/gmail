@@ -6,4 +6,4 @@ class UserSpam(models.Model) :
 
     @property
     def spam_counter(self) : 
-        return self.spammed_by.count()
+        return self.spammed_by.all().count()
