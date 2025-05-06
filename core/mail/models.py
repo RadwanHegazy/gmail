@@ -57,6 +57,8 @@ class Mail (models.Model) :
     body = models.BinaryField()
     datetime = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    hash_key = models.TextField(editable=False)
+
     status = models.CharField(
         max_length=10, 
         choices=MAIL_STATUS, 
@@ -90,7 +92,7 @@ class Mail (models.Model) :
 
     @property
     def __fernet(self) : 
-        key = self.sender.hash_key + self.reciver.hash_key
+        key = self.sender.hash_key + self.reciver.hash_key + self.hash_key
         fernet = Fernet(
             key
         )
