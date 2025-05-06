@@ -12,8 +12,8 @@ def cleanup_deleted_mails():
     
     # Get all soft-deleted mails older than 30 days
     old_deleted_mails = Mail.objects.filter(
-        status=MAIL_STATUS.deleted,
-        datetime__lte=threshold_date
+        status=MAIL_STATUS.deleted.value,
+        datetime__lte=threshold_date 
     )
     
     # Permanently delete these mails
